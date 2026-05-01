@@ -274,9 +274,10 @@
 
     try {
       await fetch(API, {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+  method: 'POST',
+  mode: 'no-cors',
+  body: JSON.stringify(data)
+});
       setStatus('saved','تم الحفظ في الشيت ✓');
       showToast('تم الحفظ — الصفحة محدّثة لجميع الزوار ✓','success');
     } catch(e) {

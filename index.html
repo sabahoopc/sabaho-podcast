@@ -338,9 +338,17 @@
       // Most libsyn feeds include spotify link in channel
       setLink('btn-spotify', 'https://open.spotify.com/show/1MmUiTNWezKQA916fpeTpW');
 
-      // Direct episode audio — init player
-      const enclosureUrl = ep.enclosure && ep.enclosure.link ? ep.enclosure.link : null;
-      if (enclosureUrl) initPlayer(enclosureUrl, ep.title);
+      // Audio URL — try multiple paths and log for debug
+      let audioUrl = null;
+      if (ep.enclosure && ep.enclosure.link)  audioUrl = ep.enclosure.link;
+      else if (ep.enclosure && ep.enclosure.url) audioUrl = ep.enclosure.url;
+      else if (ep.audio)  audioUrl = ep.audio;
+      else if (ep.url)    audioUrl = ep.url;
+
+      console.log('Full episode:', JSON.stringify(ep, null, 2));
+      console.log('Audio URL:', audioUrl);
+
+      if (audioUrl) initPlayer(audioUrl, ep.title);
 
       // Load extra links (YouTube + overrides) from Google Sheet
       await loadSheetExtras();

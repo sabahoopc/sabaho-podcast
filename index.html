@@ -293,13 +293,13 @@
   // Use rss2json public API to bypass CORS on RSS feeds
   async function loadFromRSS() {
     try {
-      // Fetch RSS via allorigins proxy — bypasses CORS and caching
-      const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(RSS_FEED + '?t=' + Date.now());
+      // Fetch RSS via Apps Script proxy
+      const proxyUrl = SHEET_API + '?action=getRSS&t=' + Date.now();
       const res  = await fetch(proxyUrl);
-      const data = await res.json();
+      const text = await res.text();
 
       const parser = new DOMParser();
-      const xml    = parser.parseFromString(data.contents, 'text/xml');
+      const xml    = parser.parseFromString(text, 'text/xml');
       const item   = xml.querySelector('item');
 
       if (!item) throw new Error('No items in RSS');

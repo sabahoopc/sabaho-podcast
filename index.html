@@ -441,10 +441,17 @@
     btn.textContent = 'جاري الإرسال…';
 
     try {
+      // Send as form data to avoid CORS issues
+      const formData = new FormData();
+      formData.append('action', 'addComment');
+      formData.append('name', name);
+      formData.append('text', text);
+      formData.append('ts', Date.now());
+
       await fetch(SHEET_API, {
         method: 'POST',
         mode: 'no-cors',
-        body: JSON.stringify({ action: 'addComment', name, text, ts: Date.now() })
+        body: formData
       });
       nameEl.value = '';
       textEl.value = '';

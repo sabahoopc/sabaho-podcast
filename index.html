@@ -8,80 +8,31 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --orange: #E05A1A;
-    --orange-light: #F06A25;
-    --orange-pale: #fdf2eb;
-    --bg: #faf8f6;
-    --surface: #ffffff;
-    --surface2: #f4f0ec;
-    --border: #e8e0d8;
-    --text: #1a1410;
-    --muted: #9a8878;
-    --radius: 14px;
+    --orange: #E05A1A; --orange-light: #F06A25; --orange-pale: #fdf2eb;
+    --bg: #faf8f6; --surface: #ffffff; --surface2: #f4f0ec;
+    --border: #e8e0d8; --text: #1a1410; --muted: #9a8878; --radius: 14px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: "Tajawal", sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-  .topbar {
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 0 48px; height: 64px; display: flex; align-items: center;
-    justify-content: space-between; position: sticky; top: 0; z-index: 100;
-  }
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 48px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .logo { display: flex; align-items: center; gap: 10px; }
   .logo-img { width: 38px; height: 38px; border-radius: 9px; object-fit: cover; object-position: 60% 15%; }
   .logo-text { font-size: 1.35rem; font-weight: 900; color: var(--orange); }
   .topbar-sub { font-size: 0.8rem; color: var(--muted); letter-spacing: 1px; }
 
-  /* Loading skeleton */
-  .skeleton {
-    background: linear-gradient(90deg, #ede8e2 25%, #e4ddd6 50%, #ede8e2 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
-    border-radius: 6px;
-  }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .hero { display: grid; grid-template-columns: 1fr 420px; min-height: 500px; max-width: 1100px; margin: 48px auto 0; padding: 0 48px; gap: 60px; align-items: center; }
 
-  .hero {
-    display: grid; grid-template-columns: 1fr 420px;
-    min-height: 500px; max-width: 1100px; margin: 48px auto 0;
-    padding: 0 48px; gap: 60px; align-items: center;
-  }
-
-  .ep-badge {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: var(--orange-pale); border: 1px solid #f0c9a8;
-    color: var(--orange); font-size: 0.75rem; font-weight: 700;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 6px 14px; border-radius: 100px; margin-bottom: 24px;
-    opacity: 0; animation: fadeUp 0.5s 0.1s forwards;
-  }
-  .ep-badge::before {
-    content: ''; width: 7px; height: 7px; border-radius: 50%;
-    background: var(--orange); animation: pulse 1.5s infinite;
-  }
+  .ep-badge { display: inline-flex; align-items: center; gap: 7px; background: var(--orange-pale); border: 1px solid #f0c9a8; color: var(--orange); font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; margin-bottom: 24px; opacity: 0; animation: fadeUp 0.5s 0.1s forwards; }
+  .ep-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: pulse 1.5s infinite; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
 
-  .ep-title {
-    font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 900; line-height: 1.25;
-    color: var(--text); margin-bottom: 18px; opacity: 0; animation: fadeUp 0.5s 0.2s forwards;
-    min-height: 40px;
-  }
-  .ep-summary {
-    font-size: 1.02rem; font-weight: 300; color: #6b5a4e; line-height: 1.9;
-    margin-bottom: 40px; max-width: 520px; opacity: 0; animation: fadeUp 0.5s 0.3s forwards;
-    min-height: 60px;
-  }
+  .ep-title { font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 900; line-height: 1.25; color: var(--text); margin-bottom: 18px; opacity: 0; animation: fadeUp 0.5s 0.2s forwards; min-height: 40px; }
+  .ep-summary { font-size: 1.02rem; font-weight: 300; color: #6b5a4e; line-height: 1.9; margin-bottom: 40px; max-width: 520px; opacity: 0; animation: fadeUp 0.5s 0.3s forwards; }
 
   .platforms { display: flex; gap: 12px; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.5s 0.4s forwards; }
-
-  .platform-btn {
-    display: flex; align-items: center; gap: 9px; padding: 12px 20px;
-    border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface);
-    color: var(--text); font-family: "Tajawal", sans-serif; font-size: 0.92rem;
-    font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s;
-    box-shadow: 0 1px 4px rgba(0,0,0,.05);
-  }
+  .platform-btn { display: flex; align-items: center; gap: 9px; padding: 12px 20px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text); font-family: "Tajawal", sans-serif; font-size: 0.92rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,.05); }
   .platform-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.1); }
   .platform-btn.apple:hover   { border-color: #fc3c44; background: #fff5f5; }
   .platform-btn.youtube:hover { border-color: #ff0000; background: #fff5f5; }
@@ -92,91 +43,54 @@
   .platform-btn.youtube .p-icon { color: #ff0000; }
   .platform-btn.spotify .p-icon { color: #1db954; }
 
+  /* Skeleton loader */
+  .skeleton { background: linear-gradient(90deg,#ede8e2 25%,#e4ddd6 50%,#ede8e2 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; display: inline-block; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
   .hero-image { position: relative; opacity: 0; animation: fadeIn 0.7s 0.3s forwards; }
-  .cover-wrap {
-    position: relative; border-radius: 20px; overflow: hidden;
-    box-shadow: 0 20px 60px rgba(224,90,26,.25), 0 4px 20px rgba(0,0,0,.12);
-  }
+  .cover-wrap { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(224,90,26,.25),0 4px 20px rgba(0,0,0,.12); }
   .cover-wrap img { width: 100%; display: block; border-radius: 20px; }
-  .cover-wrap::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 4px; background: var(--orange);
-  }
+  .cover-wrap::after { content:''; position:absolute; bottom:0; left:0; right:0; height:4px; background:var(--orange); }
 
   .divider { max-width: 1000px; margin: 56px auto 0; height: 1px; background: linear-gradient(90deg,transparent,var(--border),transparent); }
 
-  /* Comments */
   .comments-section { max-width: 700px; margin: 52px auto 0; padding: 0 48px 80px; opacity: 0; animation: fadeUp 0.5s 0.55s forwards; }
+  .section-title { font-size: 0.75rem; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
 
-  .section-title {
-    font-size: 0.75rem; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
-  }
-  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .comment-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 36px; box-shadow: 0 2px 12px rgba(0,0,0,.04); }
+  .comment-form input, .comment-form textarea { width:100%; background:var(--surface2); border:1.5px solid var(--border); border-radius:9px; color:var(--text); font-family:"Tajawal",sans-serif; font-size:.95rem; padding:12px 14px; margin-bottom:12px; outline:none; resize:vertical; transition:border-color .2s; }
+  .comment-form input:focus, .comment-form textarea:focus { border-color:var(--orange); background:#fff; }
+  .comment-form textarea { min-height:100px; }
+  .submit-btn { display:inline-flex; align-items:center; gap:8px; background:var(--orange); color:#fff; border:none; border-radius:9px; padding:11px 22px; font-family:"Tajawal",sans-serif; font-size:.95rem; font-weight:700; cursor:pointer; transition:background .2s,transform .15s; }
+  .submit-btn:hover { background:var(--orange-light); transform:translateY(-1px); }
 
-  .comment-form {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 22px; margin-bottom: 36px; box-shadow: 0 2px 12px rgba(0,0,0,.04);
-  }
-  .comment-form input, .comment-form textarea {
-    width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
-    border-radius: 9px; color: var(--text); font-family: "Tajawal", sans-serif;
-    font-size: .95rem; padding: 12px 14px; margin-bottom: 12px; outline: none;
-    resize: vertical; transition: border-color .2s;
-  }
-  .comment-form input:focus, .comment-form textarea:focus { border-color: var(--orange); background: #fff; }
-  .comment-form textarea { min-height: 100px; }
+  .comment-list { display:flex; flex-direction:column; gap:14px; }
+  .comment-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:0 1px 6px rgba(0,0,0,.03); animation:fadeUp .35s forwards; }
+  .comment-meta { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .avatar { width:34px; height:34px; border-radius:50%; background:var(--orange-pale); border:1.5px solid #f0c9a8; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:800; color:var(--orange); flex-shrink:0; }
+  .comment-name { font-weight:700; font-size:.95rem; }
+  .comment-time { font-size:.78rem; color:var(--muted); margin-right:auto; }
+  .comment-text { font-size:.93rem; color:#5a4a3e; line-height:1.8; }
+  .no-comments { text-align:center; color:var(--muted); font-size:.9rem; padding:32px 0; }
 
-  .submit-btn {
-    display: inline-flex; align-items: center; gap: 8px; background: var(--orange);
-    color: #fff; border: none; border-radius: 9px; padding: 11px 22px;
-    font-family: "Tajawal", sans-serif; font-size: .95rem; font-weight: 700;
-    cursor: pointer; transition: background .2s, transform .15s;
-  }
-  .submit-btn:hover { background: var(--orange-light); transform: translateY(-1px); }
-  .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+  .share-section { max-width:700px; margin:0 auto; padding:0 48px 80px; opacity:0; animation:fadeUp 0.5s 0.65s forwards; }
+  .share-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .share-btn { display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:9px; border:1.5px solid var(--border); background:var(--surface); color:var(--text); font-family:"Tajawal",sans-serif; font-size:.88rem; font-weight:600; cursor:pointer; text-decoration:none; transition:all .2s; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+  .share-btn:hover { border-color:var(--orange); background:var(--orange-pale); color:var(--orange); }
+  .share-btn svg { width:16px; height:16px; }
 
-  .comment-list { display: flex; flex-direction: column; gap: 14px; }
-  .comment-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 18px 20px; box-shadow: 0 1px 6px rgba(0,0,0,.03); animation: fadeUp .35s forwards;
-  }
-  .comment-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .avatar {
-    width: 34px; height: 34px; border-radius: 50%; background: var(--orange-pale);
-    border: 1.5px solid #f0c9a8; display: flex; align-items: center; justify-content: center;
-    font-size: .9rem; font-weight: 800; color: var(--orange); flex-shrink: 0;
-  }
-  .comment-name { font-weight: 700; font-size: .95rem; }
-  .comment-time { font-size: .78rem; color: var(--muted); margin-right: auto; }
-  .comment-text { font-size: .93rem; color: #5a4a3e; line-height: 1.8; }
-  .no-comments  { text-align: center; color: var(--muted); font-size: .9rem; padding: 32px 0; }
-
-  /* Share */
-  .share-section { max-width: 700px; margin: 0 auto; padding: 0 48px 80px; opacity: 0; animation: fadeUp 0.5s 0.65s forwards; }
-  .share-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .share-btn {
-    display: flex; align-items: center; gap: 8px; padding: 10px 16px;
-    border-radius: 9px; border: 1.5px solid var(--border); background: var(--surface);
-    color: var(--text); font-family: "Tajawal", sans-serif; font-size: .88rem;
-    font-weight: 600; cursor: pointer; text-decoration: none; transition: all .2s;
-    box-shadow: 0 1px 4px rgba(0,0,0,.04);
-  }
-  .share-btn:hover { border-color: var(--orange); background: var(--orange-pale); color: var(--orange); }
-  .share-btn svg { width: 16px; height: 16px; }
-  .share-btn.hidden { display: none; }
-
-  footer { background: var(--text); text-align: center; padding: 28px 40px; color: #9a8070; font-size: .82rem; }
-  footer a { color: var(--orange); text-decoration: none; }
+  footer { background:var(--text); text-align:center; padding:28px 40px; color:#9a8070; font-size:.82rem; }
+  footer a { color:var(--orange); text-decoration:none; }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeIn { from{opacity:0;transform:scale(.97)} to{opacity:1;transform:scale(1)} }
 
-  @media (max-width: 768px) {
-    .hero { grid-template-columns: 1fr; padding: 0 20px; gap: 36px; }
-    .hero-image { max-width: 300px; margin: 0 auto; }
-    .topbar { padding: 0 20px; }
-    .comments-section, .share-section { padding: 0 20px 60px; }
+  @media (max-width:768px) {
+    .hero { grid-template-columns:1fr; padding:0 20px; gap:36px; }
+    .hero-image { max-width:300px; margin:0 auto; }
+    .topbar { padding:0 20px; }
+    .comments-section, .share-section { padding:0 20px 60px; }
   }
 </style>
 </head>
@@ -193,8 +107,8 @@
 <section class="hero">
   <div class="hero-content">
     <div class="ep-badge">حلقة هذا الأسبوع</div>
-    <h1 class="ep-title" id="ep-title">جاري التحميل…</h1>
-    <p class="ep-summary" id="ep-summary"></p>
+    <h1 class="ep-title" id="ep-title"><span class="skeleton" style="width:320px;height:36px;">&nbsp;</span></h1>
+    <p class="ep-summary" id="ep-summary"><span class="skeleton" style="width:100%;height:16px;margin-bottom:8px;display:block;">&nbsp;</span><span class="skeleton" style="width:80%;height:16px;display:block;">&nbsp;</span></p>
     <div class="platforms">
       <a class="platform-btn apple hidden" id="btn-apple" href="#" target="_blank" rel="noopener">
         <svg class="p-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zm0 11.75c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
@@ -224,7 +138,7 @@
   <div class="comment-form">
     <input type="text" id="comment-name" placeholder="اسمك" maxlength="50">
     <textarea id="comment-text" placeholder="شاركنا رأيك في الحلقة…" maxlength="500"></textarea>
-    <button class="submit-btn" id="submit-btn" onclick="submitComment()">
+    <button class="submit-btn" onclick="submitComment()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       أرسل التعليق
     </button>
@@ -243,15 +157,15 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       تويتر / X
     </a>
-    <a class="share-btn" id="share-insta" href="https://www.instagram.com/sabahoo_pc?igsh=MWRub2piYjljaWhwZQ==" target="_blank" rel="noopener">
+    <a class="share-btn" href="https://www.instagram.com/sabahoo_pc?igsh=MWRub2piYjljaWhwZQ==" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
       إنستقرام
     </a>
-    <a class="share-btn" id="share-snap" href="https://snapchat.com/t/JE8HG24S" target="_blank" rel="noopener">
+    <a class="share-btn" href="https://snapchat.com/t/JE8HG24S" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12.017 2c1.564.004 4.507.49 6.013 3.41.516.99.392 2.715.31 3.863l-.013.19c-.005.074.047.11.095.127.228.074.59.1.895.063a1.8 1.8 0 00.365-.096c.12-.042.249-.088.395-.088.296 0 .574.192.574.467 0 .495-.536.811-1.006.98-.09.033-.188.064-.29.095-.47.143-.67.29-.615.554.01.047.14.652.673 1.39.266.37.68.811 1.3 1.156a.267.267 0 01.143.278c-.03.178-.19.352-.506.464-.343.12-.853.18-1.52.168a4.32 4.32 0 01-.804-.096c-.072-.016-.13-.03-.18-.04-.07-.013-.118-.018-.158-.01-.048.008-.09.04-.15.115-.2.25-.512.816-.757 1.3-.372.73-.75 1.172-1.277 1.43a3.68 3.68 0 01-1.617.372 4.97 4.97 0 01-.876-.083 4.8 4.8 0 01-1.003-.37 3.78 3.78 0 01-.567-.38 1.064 1.064 0 00-.686-.24c-.23 0-.46.078-.686.24-.17.12-.36.247-.567.38a4.8 4.8 0 01-1.003.37 4.97 4.97 0 01-.876.083 3.68 3.68 0 01-1.617-.372c-.527-.258-.905-.7-1.277-1.43-.245-.484-.557-1.05-.757-1.3-.06-.075-.102-.107-.15-.115-.04-.008-.088-.003-.158.01-.05.01-.108.024-.18.04a4.32 4.32 0 01-.804.096c-.667.012-1.177-.048-1.52-.168-.316-.112-.476-.286-.506-.464a.267.267 0 01.143-.278c.62-.345 1.034-.787 1.3-1.156.533-.738.663-1.343.673-1.39.055-.264-.145-.411-.615-.554-.102-.031-.2-.062-.29-.095C3.536 11.795 3 11.479 3 10.984c0-.275.278-.467.574-.467.146 0 .275.046.395.088.12.042.246.082.365.096.305.037.667.011.895-.063.048-.017.1-.053.095-.127l-.013-.19c-.082-1.148-.206-2.873.31-3.863C7.127 2.49 10.07 2.004 11.634 2h.383z"/></svg>
       سناب شات
     </a>
-    <a class="share-btn" id="share-tiktok" href="https://www.tiktok.com/@sabahoo.pc?_r=1&_t=ZS-960XD7uhLmP" target="_blank" rel="noopener">
+    <a class="share-btn" href="https://www.tiktok.com/@sabahoo.pc?_r=1&_t=ZS-960XD7uhLmP" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
       تيك توك
     </a>
@@ -267,44 +181,107 @@
 </footer>
 
 <script>
-  const API = 'https://script.google.com/macros/s/AKfycbwhfgB-oYM-6kaJ_ZyGBfg0XCOWGFrVtWgddAtbvxn6yO9vP0XUIXpudsaaNPENYC39/exec';
+  const RSS_FEED   = 'https://feeds.libsyn.com/565035/rss';
+  const SHEET_API  = 'https://script.google.com/macros/s/AKfycbwhfgB-oYM-6kaJ_ZyGBfg0XCOWGFrVtWgddAtbvxn6yO9vP0XUIXpudsaaNPENYC39/exec';
   const COMMENTS_KEY = 'sabaho_comments';
 
-  // ── Load config from Google Sheets ───────────────────────────────────────
-  async function loadConfig() {
+  // ── RSS Parser ────────────────────────────────────────────────────────────
+  // Use rss2json public API to bypass CORS on RSS feeds
+  async function loadFromRSS() {
     try {
-      const res = await fetch(API);
+      const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS_FEED);
+      const res  = await fetch(apiUrl);
+      const json = await res.json();
+
+      if (json.status !== 'ok' || !json.items || !json.items.length) {
+        throw new Error('RSS parse failed');
+      }
+
+      const ep = json.items[0]; // Latest episode
+
+      // Title
+      document.getElementById('ep-title').textContent = ep.title || '';
+
+      // Summary — strip HTML tags from description
+      const raw = ep.description || ep.content || '';
+      const tmp = document.createElement('div');
+      tmp.innerHTML = raw;
+      const plainText = (tmp.textContent || tmp.innerText || '').trim();
+      // Take first 300 chars as summary
+      document.getElementById('ep-summary').textContent =
+        plainText.length > 300 ? plainText.substring(0, 300) + '…' : plainText;
+
+      document.title = (ep.title || 'صباحو') + ' – صباحو بودكاست';
+
+      // Apple Podcasts link — from enclosure or feed link
+      const appleLink = json.feed && json.feed.link ? json.feed.link : null;
+      if (appleLink) setLink('btn-apple', appleLink);
+
+      // Spotify — check itunes:new-feed-url or fallback
+      // Most libsyn feeds include spotify link in channel
+      const spotifyLink = extractSpotify(json);
+      if (spotifyLink) setLink('btn-spotify', spotifyLink);
+
+      // Direct episode audio (fallback for Apple)
+      const enclosureUrl = ep.enclosure && ep.enclosure.link ? ep.enclosure.link : null;
+      if (enclosureUrl && !appleLink) setLink('btn-apple', enclosureUrl);
+
+      // Load extra links (YouTube + overrides) from Google Sheet
+      await loadSheetExtras(ep.title);
+
+    } catch(err) {
+      console.error('RSS Error:', err);
+      // Fallback to sheet only
+      await loadSheetExtras('');
+    }
+  }
+
+  function extractSpotify(json) {
+    // Try to find spotify in channel data
+    try {
+      const raw = JSON.stringify(json.feed || {});
+      const match = raw.match(/https:\/\/open\.spotify\.com\/show\/[a-zA-Z0-9]+/);
+      return match ? match[0] : null;
+    } catch { return null; }
+  }
+
+  // ── Sheet extras (YouTube link + tweet text override) ────────────────────
+  async function loadSheetExtras(rssTitle) {
+    try {
+      const res = await fetch(SHEET_API);
       const c   = await res.json();
 
-      document.getElementById('ep-title').textContent   = c.title   || 'صباحو';
-      document.getElementById('ep-summary').textContent = c.summary || '';
+      // If sheet has a title, prefer it over RSS (manual override)
+      if (c.title) document.getElementById('ep-title').textContent = c.title;
+      if (c.summary) document.getElementById('ep-summary').textContent = c.summary;
 
-      setLink('btn-apple',   c.apple);
-      setLink('btn-youtube', c.youtube);
-      setLink('btn-spotify', c.spotify);
-  
-  
-  
+      // YouTube — only from sheet (RSS doesn't have it)
+      if (c.youtube) setLink('btn-youtube', c.youtube);
 
-      // X share — tweet intent with dynamic text
+      // Apple/Spotify override from sheet if provided
+      if (c.apple)   setLink('btn-apple',   c.apple);
+      if (c.spotify) setLink('btn-spotify', c.spotify);
+
+      // X share tweet
       const xBtn = document.getElementById('share-x');
-      xBtn.href = 'https://twitter.com/intent/tweet?text=' +
-        encodeURIComponent(c.tweetText || '') + '&url=' + encodeURIComponent(location.href);
+      if (c.tweetText) {
+        xBtn.href = 'https://twitter.com/intent/tweet?text=' +
+          encodeURIComponent(c.tweetText) + '&url=' + encodeURIComponent(location.href);
+      }
 
-      document.title = (c.title || 'صباحو') + ' – صباحو بودكاست';
     } catch(e) {
-      document.getElementById('ep-title').textContent = 'تعذّر تحميل البيانات';
+      console.error('Sheet Error:', e);
     }
   }
 
   function setLink(id, href) {
     const el = document.getElementById(id);
-    if (!el) return;
-    if (href && href.length > 4) { el.href = href; el.classList.remove('hidden'); }
-    else el.classList.add('hidden');
+    if (!el || !href || href.length < 5) return;
+    el.href = href;
+    el.classList.remove('hidden');
   }
 
-  // ── Comments (localStorage) ───────────────────────────────────────────────
+  // ── Comments ──────────────────────────────────────────────────────────────
   function loadComments() {
     try { return JSON.parse(localStorage.getItem(COMMENTS_KEY)) || []; }
     catch { return []; }
@@ -314,8 +291,8 @@
   function timeAgo(ts) {
     const d = (Date.now()-ts)/1000;
     if (d<60)    return 'الآن';
-    if (d<3600)  return 'منذ ' + Math.floor(d/60)   + ' دقيقة';
-    if (d<86400) return 'منذ ' + Math.floor(d/3600)  + ' ساعة';
+    if (d<3600)  return 'منذ ' + Math.floor(d/60)  + ' دقيقة';
+    if (d<86400) return 'منذ ' + Math.floor(d/3600) + ' ساعة';
     return 'منذ ' + Math.floor(d/86400) + ' يوم';
   }
 
@@ -364,7 +341,7 @@
     });
   }
 
-  loadConfig();
+  loadFromRSS();
   renderComments();
 </script>
 </body>

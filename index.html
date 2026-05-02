@@ -227,12 +227,12 @@
       if (enclosureUrl && !appleLink) setLink('btn-apple', enclosureUrl);
 
       // Load extra links (YouTube + overrides) from Google Sheet
-      await loadSheetExtras(ep.title);
+      await loadSheetExtras();
 
     } catch(err) {
       console.error('RSS Error:', err);
       // Fallback to sheet only
-      await loadSheetExtras('');
+      await loadSheetExtras();
     }
   }
 
@@ -245,27 +245,19 @@
     } catch { return null; }
   }
 
-  // ── Sheet extras (YouTube link + tweet text override) ────────────────────
-  async function loadSheetExtras(rssTitle) {
+  // ── Sheet extras (YouTube only — does NOT override RSS content) ─────────
+  async function loadSheetExtras() {
     try {
       const res = await fetch(SHEET_API);
       const c   = await res.json();
 
-      // If sheet has a title, prefer it over RSS (manual override)
-      if (c.title) document.getElementById('ep-title').textContent = c.title;
-      if (c.summary) document.getElementById('ep-summary').textContent = c.summary;
-
-      // YouTube — only from sheet (RSS doesn't have it)
+      // YouTube only — RSS doesn't carry this
       if (c.youtube) setLink('btn-youtube', c.youtube);
 
-      // Apple/Spotify override from sheet if provided
-      if (c.apple)   setLink('btn-apple',   c.apple);
-      if (c.spotify) setLink('btn-spotify', c.spotify);
-
-      // X share tweet
-      const xBtn = document.getElementById('share-x');
+      // X share tweet text
       if (c.tweetText) {
-        xBtn.href = 'https://twitter.com/intent/tweet?text=' +
+        document.getElementById('share-x').href =
+          'https://twitter.com/intent/tweet?text=' +
           encodeURIComponent(c.tweetText) + '&url=' + encodeURIComponent(location.href);
       }
 

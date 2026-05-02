@@ -288,7 +288,6 @@
 <script>
   const RSS_FEED   = 'https://feeds.libsyn.com/565035/rss';
   const SHEET_API  = 'https://script.google.com/macros/s/AKfycbwhfgB-oYM-6kaJ_ZyGBfg0XCOWGFrVtWgddAtbvxn6yO9vP0XUIXpudsaaNPENYC39/exec';
-  const COMMENTS_KEY = 'sabaho_comments';
 
   // ── RSS Parser ────────────────────────────────────────────────────────────
   // Use rss2json public API to bypass CORS on RSS feeds
@@ -385,18 +384,12 @@
     el.classList.remove('hidden');
   }
 
-  // ── Comments ──────────────────────────────────────────────────────────────
-  function loadComments() {
-    try { return JSON.parse(localStorage.getItem(COMMENTS_KEY)) || []; }
-    catch { return []; }
-  }
-  function saveComments(arr) { localStorage.setItem(COMMENTS_KEY, JSON.stringify(arr)); }
-
+  // ── Comments (Google Sheets) ─────────────────────────────────────────────
   function timeAgo(ts) {
-    const d = (Date.now()-ts)/1000;
-    if (d<60)    return 'الآن';
-    if (d<3600)  return 'منذ ' + Math.floor(d/60)  + ' دقيقة';
-    if (d<86400) return 'منذ ' + Math.floor(d/3600) + ' ساعة';
+    const d = (Date.now() - ts) / 1000;
+    if (d < 60)    return 'الآن';
+    if (d < 3600)  return 'منذ ' + Math.floor(d/60)   + ' دقيقة';
+    if (d < 86400) return 'منذ ' + Math.floor(d/3600)  + ' ساعة';
     return 'منذ ' + Math.floor(d/86400) + ' يوم';
   }
 
@@ -404,37 +397,65 @@
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  function renderComments() {
-    const list = loadComments();
+  async function loadComments() {
+    try {
+      const res  = await fetch(SHEET_API + '?action=getComments');
+      const list = await res.json();
+      renderComments(list);
+    } catch(e) {
+      console.error('Comments load error:', e);
+      renderComments([]);
+    }
+  }
+
+  function renderComments(list) {
     const container = document.getElementById('comment-list');
-    container.querySelectorAll('.comment-card').forEach(el=>el.remove());
+    container.querySelectorAll('.comment-card').forEach(el => el.remove());
     const none = document.getElementById('no-comments-msg');
-    if (!list.length) { none.style.display='block'; return; }
-    none.style.display='none';
-    list.slice().reverse().forEach(c=>{
+    if (!list || !list.length) { none.style.display = 'block'; return; }
+    none.style.display = 'none';
+    list.slice().reverse().forEach(c => {
       const card = document.createElement('div');
       card.className = 'comment-card';
       card.innerHTML = `
         <div class="comment-meta">
-          <div class="avatar">${escHtml(c.name.charAt(0))}</div>
-          <div class="comment-name">${escHtml(c.name)}</div>
-          <div class="comment-time">${timeAgo(c.ts)}</div>
+          <div class="avatar">${escHtml(String(c.name).charAt(0))}</div>
+          <div class="comment-name">${escHtml(String(c.name))}</div>
+          <div class="comment-time">${timeAgo(Number(c.ts))}</div>
         </div>
-        <div class="comment-text">${escHtml(c.text)}</div>`;
+        <div class="comment-text">${escHtml(String(c.text))}</div>`;
       container.appendChild(card);
     });
   }
 
-  function submitComment() {
-    const name = document.getElementById('comment-name').value.trim();
-    const text = document.getElementById('comment-text').value.trim();
-    if (!name||!text) { alert('يرجى إدخال الاسم والتعليق.'); return; }
-    const list = loadComments();
-    list.push({name, text, ts: Date.now()});
-    saveComments(list);
-    document.getElementById('comment-name').value = '';
-    document.getElementById('comment-text').value = '';
-    renderComments();
+  async function submitComment() {
+    const nameEl = document.getElementById('comment-name');
+    const textEl = document.getElementById('comment-text');
+    const btn    = document.getElementById('submit-btn');
+    const name   = nameEl.value.trim();
+    const text   = textEl.value.trim();
+
+    if (!name || !text) { alert('يرجى إدخال الاسم والتعليق.'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'جاري الإرسال…';
+
+    try {
+      await fetch(SHEET_API, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({ action: 'addComment', name, text, ts: Date.now() })
+      });
+      nameEl.value = '';
+      textEl.value = '';
+      // Wait briefly then reload comments
+      setTimeout(() => loadComments(), 1000);
+    } catch(e) {
+      alert('تعذّر إرسال التعليق، حاول مرة أخرى.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> أرسل التعليق`;
+    }
   }
 
   function copyLink() {
@@ -515,7 +536,7 @@
   }
 
   loadFromRSS();
-  renderComments();
+  loadComments();
 </script>
 </body>
 </html>

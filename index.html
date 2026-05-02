@@ -293,7 +293,7 @@
   // Use rss2json public API to bypass CORS on RSS feeds
   async function loadFromRSS() {
     try {
-      const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS_FEED);
+      const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS_FEED) + '&t=' + Date.now();
       const res  = await fetch(apiUrl);
       const json = await res.json();
 

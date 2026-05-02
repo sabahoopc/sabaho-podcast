@@ -293,51 +293,44 @@
   // Use rss2json public API to bypass CORS on RSS feeds
   async function loadFromRSS() {
     try {
-      const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(RSS_FEED) + '&t=' + Date.now();
-      const res  = await fetch(apiUrl);
-      const json = await res.json();
+      // Fetch RSS via allorigins proxy — bypasses CORS and caching
+      const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(RSS_FEED + '?t=' + Date.now());
+      const res  = await fetch(proxyUrl);
+      const data = await res.json();
 
-      if (json.status !== 'ok' || !json.items || !json.items.length) {
-        throw new Error('RSS parse failed');
-      }
+      const parser = new DOMParser();
+      const xml    = parser.parseFromString(data.contents, 'text/xml');
+      const item   = xml.querySelector('item');
 
-      const ep = json.items[0]; // Latest episode
+      if (!item) throw new Error('No items in RSS');
 
       // Title
-      document.getElementById('ep-title').textContent = ep.title || '';
+      const title = item.querySelector('title').textContent.trim();
+      document.getElementById('ep-title').textContent = title;
+      document.title = title + ' – صباحو بودكاست';
 
-      // Summary — strip HTML tags from description
-      const raw = ep.description || ep.content || '';
+      // Summary
+      const summaryEl = item.querySelector('summary') || item.querySelector('description');
+      const rawText   = summaryEl ? summaryEl.textContent.trim() : '';
       const tmp = document.createElement('div');
-      tmp.innerHTML = raw;
+      tmp.innerHTML = rawText;
       const plainText = (tmp.textContent || tmp.innerText || '').trim();
-      // Take first 300 chars as summary
       document.getElementById('ep-summary').textContent =
         plainText.length > 300 ? plainText.substring(0, 300) + '…' : plainText;
 
-      document.title = (ep.title || 'صباحو') + ' – صباحو بودكاست';
+      // Apple — channel link
+      const chanLink = xml.querySelector('channel > link');
+      if (chanLink) setLink('btn-apple', chanLink.textContent.trim());
 
-      // Apple Podcasts link — from enclosure or feed link
-      const appleLink = json.feed && json.feed.link ? json.feed.link : null;
-      if (appleLink) setLink('btn-apple', appleLink);
-
-      // Spotify — check itunes:new-feed-url or fallback
-      // Most libsyn feeds include spotify link in channel
+      // Spotify fixed
       setLink('btn-spotify', 'https://open.spotify.com/show/1MmUiTNWezKQA916fpeTpW');
 
-      // Audio URL — try multiple paths and log for debug
-      let audioUrl = null;
-      if (ep.enclosure && ep.enclosure.link)  audioUrl = ep.enclosure.link;
-      else if (ep.enclosure && ep.enclosure.url) audioUrl = ep.enclosure.url;
-      else if (ep.audio)  audioUrl = ep.audio;
-      else if (ep.url)    audioUrl = ep.url;
+      // Audio from enclosure
+      const enclosure = item.querySelector('enclosure');
+      const audioUrl  = enclosure ? enclosure.getAttribute('url') : null;
+      if (audioUrl) initPlayer(audioUrl, title);
 
-      console.log('Full episode:', JSON.stringify(ep, null, 2));
-      console.log('Audio URL:', audioUrl);
-
-      if (audioUrl) initPlayer(audioUrl, ep.title);
-
-      // Load extra links (YouTube + overrides) from Google Sheet
+      // Load YouTube from Sheet
       await loadSheetExtras();
 
     } catch(err) {

@@ -94,22 +94,15 @@
   }
 
   /* ── Audio Player ── */
-  .player-section {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 48px;
-    opacity: 0;
-    animation: fadeUp 0.5s 0.45s forwards;
-  }
-
   .player-card {
     background: var(--text);
-    border-radius: 18px;
-    padding: 28px 32px;
+    border-radius: 14px;
+    padding: 18px 22px;
     display: flex;
     align-items: center;
-    gap: 24px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+    gap: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    max-width: 520px;
   }
 
   .play-btn {
@@ -212,6 +205,28 @@
         سبوتيفاي
       </a>
     </div>
+
+    <!-- Inline Player -->
+    <div class="player-card hidden" id="player-card" style="margin-top:28px;">
+      <button class="play-btn" id="play-btn" onclick="togglePlay()">
+        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <div class="player-info">
+        <div class="progress-wrap">
+          <span class="time-label" id="time-current">0:00</span>
+          <div class="progress-bar" id="progress-bar" onclick="seekAudio(event)">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span class="time-label" id="time-total">0:00</span>
+        </div>
+      </div>
+      <div class="volume-wrap">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <input class="volume-slider" type="range" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
+      </div>
+      <button class="speed-btn" id="speed-btn" onclick="cycleSpeed()">1×</button>
+    </div>
   </div>
   <div class="hero-image">
     <div class="cover-wrap">
@@ -220,33 +235,6 @@
   </div>
 </section>
 
-
-<section class="player-section" id="player-section">
-  <div class="player-card hidden" id="player-card">
-    <button class="play-btn" id="play-btn" onclick="togglePlay()">
-      <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-    </button>
-
-    <div class="player-info">
-      <div class="player-title" id="player-title">جاري التحميل…</div>
-      <div class="progress-wrap">
-        <span class="time-label" id="time-current">0:00</span>
-        <div class="progress-bar" id="progress-bar" onclick="seekAudio(event)">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
-        <span class="time-label" id="time-total">0:00</span>
-      </div>
-    </div>
-
-    <div class="volume-wrap">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-      <input class="volume-slider" type="range" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
-    </div>
-
-    <button class="speed-btn" id="speed-btn" onclick="cycleSpeed()">1×</button>
-  </div>
-</section>
 
 <div class="divider"></div>
 
@@ -467,7 +455,6 @@
     if (!audioUrl) return;
     audio.src = audioUrl;
     audio.preload = 'metadata';
-    document.getElementById('player-title').textContent = title || '';
     document.getElementById('player-card').classList.remove('hidden');
 
     audio.addEventListener('timeupdate', updateProgress);
@@ -476,6 +463,13 @@
     });
     audio.addEventListener('ended', () => {
       document.getElementById('play-btn').classList.remove('playing');
+    });
+
+    // Autoplay
+    audio.play().then(() => {
+      document.getElementById('play-btn').classList.add('playing');
+    }).catch(() => {
+      // Browser blocked autoplay — user must press play manually
     });
   }
 

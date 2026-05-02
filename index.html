@@ -219,8 +219,7 @@
 
       // Spotify — check itunes:new-feed-url or fallback
       // Most libsyn feeds include spotify link in channel
-      const spotifyLink = extractSpotify(json);
-      if (spotifyLink) setLink('btn-spotify', spotifyLink);
+      setLink('btn-spotify', 'https://open.spotify.com/show/1MmUiTNWezKQA916fpeTpW');
 
       // Direct episode audio (fallback for Apple)
       const enclosureUrl = ep.enclosure && ep.enclosure.link ? ep.enclosure.link : null;

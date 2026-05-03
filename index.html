@@ -238,23 +238,6 @@
 
 <div class="divider"></div>
 
-<section class="comments-section">
-  <div class="section-title">التعليقات</div>
-  <div class="comment-form">
-    <input type="text" id="comment-name" placeholder="اسمك" maxlength="50">
-    <textarea id="comment-text" placeholder="شاركنا رأيك في الحلقة…" maxlength="500"></textarea>
-    <button class="submit-btn" id="submit-btn" onclick="submitComment()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      أرسل التعليق
-    </button>
-  </div>
-  <div class="comment-list" id="comment-list">
-    <div class="no-comments" id="no-comments-msg">لا توجد تعليقات بعد. كن أول من يعلّق!</div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
 <section class="share-section">
   <div class="section-title" style="margin-bottom:18px;">شارك وتابع</div>
   <div class="share-row">
@@ -281,6 +264,23 @@
   </div>
 </section>
 
+<div class="divider"></div>
+
+<section class="comments-section">
+  <div class="section-title">التعليقات</div>
+  <div class="comment-form">
+    <input type="text" id="comment-name" placeholder="اسمك" maxlength="50">
+    <textarea id="comment-text" placeholder="شاركنا رأيك في الحلقة…" maxlength="500"></textarea>
+    <button class="submit-btn" id="submit-btn" onclick="submitComment()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      أرسل التعليق
+    </button>
+  </div>
+  <div class="comment-list" id="comment-list">
+    <div class="no-comments" id="no-comments-msg">لا توجد تعليقات بعد. كن أول من يعلّق!</div>
+  </div>
+</section>
+
 <footer>
   بودكاست <a href="#">صباحو</a> مع أحمد قرپش — جميع الحقوق محفوظة
 </footer>
@@ -293,44 +293,30 @@
   // Use rss2json public API to bypass CORS on RSS feeds
   async function loadFromRSS() {
     try {
-      // Fetch RSS via Apps Script proxy
-      const proxyUrl = SHEET_API + '?action=getRSS&t=' + Date.now();
+      // Fetch RSS as JSON via Apps Script
+      const proxyUrl = SHEET_API + '?action=getLatestEpisode&t=' + Date.now();
       const res  = await fetch(proxyUrl);
-      const text = await res.text();
+      const ep   = await res.json();
 
-      const parser = new DOMParser();
-      const xml    = parser.parseFromString(text, 'text/xml');
-      const item   = xml.querySelector('item');
-
-      if (!item) throw new Error('No items in RSS');
+      if (!ep || ep.error) throw new Error(ep.error || 'No episode');
 
       // Title
-      const title = item.querySelector('title').textContent.trim();
-      document.getElementById('ep-title').textContent = title;
-      document.title = title + ' – صباحو بودكاست';
+      document.getElementById('ep-title').textContent = ep.title;
+      document.title = ep.title + ' – صباحو بودكاست';
 
       // Summary
-      const summaryEl = item.querySelector('summary') || item.querySelector('description');
-      const rawText   = summaryEl ? summaryEl.textContent.trim() : '';
-      const tmp = document.createElement('div');
-      tmp.innerHTML = rawText;
-      const plainText = (tmp.textContent || tmp.innerText || '').trim();
-      document.getElementById('ep-summary').textContent =
-        plainText.length > 300 ? plainText.substring(0, 300) + '…' : plainText;
+      document.getElementById('ep-summary').textContent = ep.summary;
 
-      // Apple — channel link
-      const chanLink = xml.querySelector('channel > link');
-      if (chanLink) setLink('btn-apple', chanLink.textContent.trim());
-
-      // Spotify fixed
+      // Platform links
+      setLink('btn-apple', 'https://podcasts.apple.com/sa/podcast/%D8%A8%D9%88%D8%AF%D9%83%D8%A7%D8%B3%D8%AA-%D8%B5%D8%A8%D8%A7%D8%AD%D9%88/id1056558436');
       setLink('btn-spotify', 'https://open.spotify.com/show/1MmUiTNWezKQA916fpeTpW');
 
-      // Audio from enclosure
-      const enclosure = item.querySelector('enclosure');
-      const audioUrl  = enclosure ? enclosure.getAttribute('url') : null;
-      if (audioUrl) initPlayer(audioUrl, title);
+      // Player
+      if (ep.audio) initPlayer(ep.audio, ep.title);
 
-      // Load YouTube from Sheet
+      // YouTube fixed
+      setLink('btn-youtube', 'https://www.youtube.com/watch?v=4zCqJLAKaM4&list=PLcLNKN-1yar1XjiP7b4qjnU33htOagimb');
+      // Load extra from Sheet
       await loadSheetExtras();
 
     } catch(err) {
